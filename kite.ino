@@ -4,13 +4,15 @@
 // global constants
 static const int SECS_IN_MINUTE = 60;
 static const int MINUTES_IN_HOUR = 60;
+// change this to set the default max speed
+#define MAX_SPEED_KM_PER_SEC 25.0
 
-char *BANNER = "KITE: version 0.2 26/12/16 git\n";
+char *BANNER = "KITE: version 0.3 26/12/16\n";
 class PARAMETERS {
 public:
   static const long BAUD = 115200;
   static const long WS_UPDATE_SEC = 1;
-  static const float WHISPER500_MAX_SPEED_KM_PER_MS = (2.0/1000); // determines alarm threshold
+  static const float WHISPER500_MAX_SPEED_KM_PER_MS = (MAX_SPEED_KM_PER_SEC/1000); // determines alarm threshold
                                                  // to throw panic switch
   static const float ANEMOMETER__MAGIC_CONSTANT = 2.5;
   static const long UI_UPDATE_SEC = WS_UPDATE_SEC * 10;
