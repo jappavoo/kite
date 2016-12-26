@@ -5,7 +5,7 @@
 static const int SECS_IN_MINUTE = 60;
 static const int MINUTES_IN_HOUR = 60;
 
-char *BANNER = "KITE: version 0.2 26/12/16\n";
+char *BANNER = "KITE: version 0.2 26/12/16 git\n";
 class PARAMETERS {
 public:
   static const long BAUD = 115200;
