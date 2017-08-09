@@ -1,5 +1,5 @@
 #/bin/bash
-set -x
+#set -x
 
 funcion findtty()
 {
@@ -10,9 +10,13 @@ funcion findtty()
    readlink -f /dev/serial/by-id/$tty
 }
 
-EMAILFILE=/tmp/WINDMILLALARM
+EMAILFILE=/tmp/KITEALARM
 
-rm -rf $EMAILFILE
+echo "cleaning any old state"
+if [[ -a $EMAILFILE ]];then
+   echo "Removing $EMAILFILE"
+   rm -rf $EMAILFILE
+fi
 
 tty=$1
 
@@ -29,7 +33,7 @@ echo "configuring tty : $tty"
  
 if ! stty -F $tty 115200 cs8 cread clocal
 then
-  echo "FAILED to configure $tty
+  echo "FAILED to configure $tty"
   exit -1
 fi
 
@@ -52,7 +56,7 @@ do
   if [[ ${line} =~ .*ALARM.* ]]; then
     echo ALARM FOUND sending email
     if [[ ! -a $EMAILFILE ]]; then
-      echo -e "Subject: Windmill ALARM\n\n $(date) ALARM DETECTED\n\n.\n" \| ssmtp sam@sdappavoo.com 
+      echo -e "Subject: Windmill ALARM\n\n $(date) ALARM DETECTED\n\n.\n" | ssmtp sam@sdappavoo.com 
       touch $EMAILFILE
     fi
   fi
