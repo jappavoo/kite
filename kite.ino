@@ -5,9 +5,9 @@
 static const int SECS_IN_MINUTE = 60;
 static const int MINUTES_IN_HOUR = 60;
 // change this to set the default max speed
-#define MAX_SPEED_KM_PER_SEC 25.0
+#define MAX_SPEED_KM_PER_SEC 20.0
 
-char *BANNER = "KITE: version 0.3 26/12/16\n";
+char *BANNER = "KITE: version 0.3 23/07/17\n";
 class PARAMETERS {
 public:
   static const long BAUD = 115200;
@@ -212,10 +212,24 @@ public:
 class PanicSwitch {
   int pin_;
   bool state_;
+  static const int REMOTE_TOGGLE_DELAY=2000;
+  static const int REMOTE_TOGGLE_REPEAT=3;
+  
+  inline void
+  remote_toggle_button(int pin)
+  {
+    for (int i=0;i<REMOTE_TOGGLE_REPEAT;i++){
+      digitalWrite(pin,HIGH);
+      delay(REMOTE_TOGGLE_DELAY);
+      digitalWrite(pin,LOW);
+      delay(REMOTE_TOGGLE_DELAY);
+      delay(500);
+    }
+  }
 public:					     
   PanicSwitch(int pin) : pin_(pin) {}
-  void panic() { digitalWrite(pin_, LOW); state_=true; }
-  void reset() { digitalWrite(pin_, HIGH); state_=false; }
+  void panic() { remote_toggle_button(pin_); state_=true; }
+  void reset() { state_=false; }
   void setup() { 
 #ifdef DEBUG
     Serial.println(__PRETTY_FUNCTION__);
