@@ -1,0 +1,37 @@
+#/bin/bash
+
+EMAILFILE=/tmp/WINDMILLALARM
+
+rm -rf $EMAILFILE
+
+
+tty=$1
+
+if [[ -z $tty ]]; then
+   echo "USAGE: $0 <arduino tty eg. /dev/ttyACM0>"
+   exit -1
+fi
+
+echo "configuring tty : $tty"
+ 
+if ! stty -F $tty cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
+then
+  echo "FAILED to configure $tty
+fi
+
+echo "Monitoring $tty for ALARM"
+
+cat < $tty | while read line
+do
+  echo $line
+
+  if [[ ${line} =~ .*ALARM.* ]]; then
+    echo ALARM FOUND sending email
+    if [[ ! -a $EMAILFILE ]]; then
+      echo -e "Subject: Windmill ALARM\n\n $(date) ALARM DETECTED\n\n.\n" \| ssmtp sam@sdappavoo.com 
+      touch $EMAILFILE
+    fi
+  fi
+done
+
+
