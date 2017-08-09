@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Terminal=true
+Name=KiteMonitor
+Icon=/home/sam/sketchbook/kite/icon.svg
+Exec=/usr/bin/gnome-terminal --window-with-profile=kitemon -e "bash -l -c /home/sam/sketchbook/kite/kitemonitor"
