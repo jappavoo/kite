@@ -7,7 +7,7 @@ static const int MINUTES_IN_HOUR = 60;
 // change this to set the default max speed
 #define MAX_SPEED_KM_PER_SEC 20.0
 
-char *BANNER = "KITE: version 0.3 23/07/17\n";
+char *BANNER = "KITE: version 0.4 09/08/17\n";
 class PARAMETERS {
 public:
   static const long BAUD = 115200;
@@ -161,6 +161,8 @@ public:
     wsUpdateMS_(PARAMETERS::WS_UPDATE_SEC * 1000)
   {}
 
+  float getMaxSpeed() { return maxSpeed_; }
+  
   inline bool isAlarm() { 
     // adjust to the logic you want
     //    return State.currentWS >= maxSpeed_;
@@ -258,6 +260,7 @@ public:
       if (alarm) Serial.print("** ALARM ** : ");
       if (PARAMETERS::ErrorCount)  {
 	Serial.print(PARAMETERS::ErrorCount);
+        Serial.print(" ");
       }
       Serial.print("CurrentSpeed: ");
       Serial.print(windMill.State.currentWS * 1000);
@@ -267,7 +270,9 @@ public:
       Serial.print(windMill.State.maxWS * 1000);
       Serial.print("] ");
       Serial.print("history avg: ");
-      Serial.println(windMill.State.history.avg() * 1000);
+      Serial.print(windMill.State.history.avg() * 1000);
+      Serial.print(" max:");
+      Serial.println(windMill.getMaxSpeed() *1000);
       lastNow_ = now;
     }
   }
