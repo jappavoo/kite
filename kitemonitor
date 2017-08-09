@@ -1,16 +1,28 @@
 #/bin/bash
 set -x
 
+funcion findtty()
+{
+   tty=$(ls /dev/serial/by-id | grep -i arduino)
+   if [[ -z $tty ]]; then
+     return -1
+   fi
+   readlink -f /dev/serial/by-id/$tty
+}
+
 EMAILFILE=/tmp/WINDMILLALARM
 
 rm -rf $EMAILFILE
 
-
 tty=$1
 
 if [[ -z $tty ]]; then
-   echo "USAGE: $0 <arduino tty eg. /dev/ttyACM0>"
-   exit -1
+   tty=$(findtty)
+   if [[ -z $tty ]]; then
+     echo "ERROR: could not find the arduino.  Make sure it is plugged in"
+     echo "USAGE: $0 [arduino tty eg. /dev/ttyACM0]"
+     exit -1
+   fi
 fi
 
 echo "configuring tty : $tty"
