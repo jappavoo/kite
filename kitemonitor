@@ -1,4 +1,5 @@
 #/bin/bash
+set -x
 
 EMAILFILE=/tmp/WINDMILLALARM
 
@@ -14,14 +15,25 @@ fi
 
 echo "configuring tty : $tty"
  
-if ! stty -F $tty cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
+if ! stty -F $tty 115200 cs8 cread clocal
 then
   echo "FAILED to configure $tty
+  exit -1
 fi
+
+echo "opening $tty on fd 3"
+
+if ! exec 3<> $tty; then 
+  echo "FAILED to open $tty"
+  exit -1
+fi
+
+echo "waiting for arduino to initialize"
+sleep 1
 
 echo "Monitoring $tty for ALARM"
 
-cat < $tty | while read line
+tail -f <&3 | while read line
 do
   echo $line
 
