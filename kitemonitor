@@ -1,7 +1,7 @@
 #/bin/bash
 #set -x
 
-funcion findtty()
+function findtty()
 {
    tty=$(ls /dev/serial/by-id | grep -i arduino)
    if [[ -z $tty ]]; then
@@ -26,6 +26,8 @@ if [[ -z $tty ]]; then
      echo "ERROR: could not find the arduino.  Make sure it is plugged in"
      echo "USAGE: $0 [arduino tty eg. /dev/ttyACM0]"
      exit -1
+   else
+     echo "Found Arduino on $tty"
    fi
 fi
 
