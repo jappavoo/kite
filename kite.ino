@@ -163,7 +163,7 @@ public:
   WindMill(int anPin, int anLedPin, float maxSpeed, float maxGust) : 
     an_(anPin,anLedPin), maxSpeed_(maxSpeed), maxGust_(maxGust),
     wsUpdateMS_(PARAMETERS::WS_UPDATE_SEC * 1000),
-    lastNow_(0),
+    lastNow_(0)
   {}
 
   float getMaxSpeed() { return maxSpeed_; }
