@@ -6,6 +6,7 @@ static const int SECS_IN_MINUTE = 60;
 static const int MINUTES_IN_HOUR = 60;
 // change this to set the default max speed
 #define MAX_SPEED_KM_PER_SEC 20.0
+#define MAX_GUST_SPEED_KM_PER_SEC 30.0 
 
 char *BANNER = "KITE: version 0.4 09/08/17\n";
 class PARAMETERS {
@@ -14,6 +15,7 @@ public:
   static const long WS_UPDATE_SEC = 1;
   static const float WHISPER500_MAX_SPEED_KM_PER_MS = (MAX_SPEED_KM_PER_SEC/1000); // determines alarm threshold
                                                  // to throw panic switch
+  static const float WHISPER500_MAX_GUST_SPEED_KM_PER_MS = (MAX_GUST_SPEED_KM_PER_SEC/1000);
   static const float ANEMOMETER__MAGIC_CONSTANT = 2.5;
   static const long UI_UPDATE_SEC = WS_UPDATE_SEC * 10;
   //  static const int HISTORY_LENGTH = SECS_IN_MINUTE * MINUTES_IN_HOUR;
@@ -150,15 +152,16 @@ protected:
   Anemometer an_;
   // max speedin km/ms
   float maxSpeed_;
+  float maxGust_;
   // update frequence values
   long wsUpdateMS_;
   long lastNow_;
 
 public:
-  WindMill(int anPin, int anLedPin, float maxSpeed) : 
-    an_(anPin,anLedPin), maxSpeed_(maxSpeed), 
+  WindMill(int anPin, int anLedPin, float maxSpeed, float maxGust) : 
+    an_(anPin,anLedPin), maxSpeed_(maxSpeed), maxGust_(maxGust),
+    wsUpdateMS_(PARAMETERS::WS_UPDATE_SEC * 1000),
     lastNow_(0),
-    wsUpdateMS_(PARAMETERS::WS_UPDATE_SEC * 1000)
   {}
 
   float getMaxSpeed() { return maxSpeed_; }
@@ -166,7 +169,8 @@ public:
   inline bool isAlarm() { 
     // adjust to the logic you want
     //    return State.currentWS >= maxSpeed_;
-    return  State.history.avg() >= maxSpeed_;
+    return State.history.avg() >= maxSpeed_ ||
+      State.maxWS >= maxGust_;
   };
 
   inline void update(long now) { 
@@ -208,7 +212,8 @@ class Whisper500 : public WindMill {
 public:
   Whisper500(int anPin, int anLedPin) : 
     WindMill(anPin, anLedPin, 
-    PARAMETERS::WHISPER500_MAX_SPEED_KM_PER_MS) {}
+	     PARAMETERS::WHISPER500_MAX_SPEED_KM_PER_MS,
+	     PARAMETERS::WHISPER500_MAX_GUST_SPEED_KM_PER_MS){}
 };
 
 class PanicSwitch {
