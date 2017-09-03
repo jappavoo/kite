@@ -3,4 +3,4 @@ Type=Application
 Terminal=false
 Name=KiteMonitor
 Icon=/home/sam/sketchbook/kite/icon.svg
-Exec=/usr/bin/gnome-terminal --window-with-profile=kitemon -e "bash -l -c /home/sam/sketchbook/kite/kitemonitor"
+Exec=/usr/bin/gnome-terminal --window-with-profile=kitemon --geometry=124x20 -e "bash -l -c /home/sam/sketchbook/kite/kitemonitor"

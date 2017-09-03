@@ -5,7 +5,7 @@
 static const int SECS_IN_MINUTE = 60;
 static const int MINUTES_IN_HOUR = 60;
 // change this to set the default max speed
-#define MAX_SPEED_KM_PER_SEC 20.0
+#define MAX_SPEED_KM_PER_SEC 17.0
 
 char *BANNER = "KITE: version 0.4 09/08/17\n";
 class PARAMETERS {
@@ -271,7 +271,7 @@ public:
       Serial.print("] ");
       Serial.print("history avg: ");
       Serial.print(windMill.State.history.avg() * 1000);
-      Serial.print(" max:");
+      Serial.print(" max: ");
       Serial.println(windMill.getMaxSpeed() *1000);
       lastNow_ = now;
     }

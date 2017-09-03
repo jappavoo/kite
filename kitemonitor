@@ -53,15 +53,17 @@ echo "Monitoring $tty for ALARM"
 
 tail -f <&3 | while read line
 do
-  echo $line
-
+ ds=$(date "+%d/%m/%y-%H:%M:%S")
+ line=${line//$'\r'/}
   if [[ ${line} =~ .*ALARM.* ]]; then
-    echo ALARM FOUND sending email
     if [[ ! -a $EMAILFILE ]]; then
-      echo -e "Subject: Windmill ALARM\n\n $(date) ALARM DETECTED\n\n.\n" | ssmtp sam@sdappavoo.com 
+      echo -e "Subject: Windmill ALARM\n\n ${ds} ALARM DETECTED\n\n.\n" | ssmtp sam@sdappavoo.com 
       touch $EMAILFILE
+      status=": Email Sent."
+      printf '\e[38;5;196m'
     fi
   fi
+  echo "$ds : $line $status"
 done
 
 
