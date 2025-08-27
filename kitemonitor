@@ -31,6 +31,13 @@ if [[ -z $tty ]]; then
    fi
 fi
 
+if fuser $tty; then
+  echo "ERROR:  I think you might already be running the kitemonitor.  Kill it and try again"
+  echo "Press enter to quit."
+  read
+  exit -1
+fi
+
 echo "configuring tty : $tty"
  
 if ! stty -F $tty 115200 cs8 cread clocal
