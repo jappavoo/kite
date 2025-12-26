@@ -10,7 +10,7 @@ static const int MINUTES_IN_HOUR = 60;
 #define MAX_GUST_SPEED_KM_PER_SEC 30.0
 
 
-char *BANNER = "KITE: version 0.4b 09/08/17\n";
+char *BANNER = "KITE: version 0.5b 26/12/25\n";
 class PARAMETERS {
 public:
   static const long BAUD = 115200;
@@ -78,11 +78,13 @@ class Anemometer {
   long risingEdgeCount_;
   long fallingEdgeCount_;
 
+  // led is wired so that low is on high is off to match halleffect sensor
+  // behaviour -- low when magnet is present and high when it is not
   void flash(int count) {
     for(int i=0;i<count;i++) {
-      digitalWrite(ledPin_, HIGH);
+      digitalWrite(ledPin_, HIGH);  // led off
       delay(100);
-      digitalWrite(ledPin_,LOW);
+      digitalWrite(ledPin_,LOW);    // led on 
       delay(100);
     }
   }
@@ -115,7 +117,7 @@ public:
     if (newState != lastState_) {
       if (newState == HIGH) risingEdgeCount_++;
       else fallingEdgeCount_++;
-      digitalWrite(ledPin_, newState);
+      digitalWrite(ledPin_, newState);  // led on = when low led off when high
     }
     lastState_ = newState;
   }
